@@ -6,6 +6,7 @@ public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] Camera cam;
     private float shootRange = 20.0f;
+    private float damage = 15.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,8 +25,8 @@ public class PlayerAttack : MonoBehaviour
     // Hide Mouse
     void HideMouse()
     {
-        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Shot Bullet
@@ -36,7 +37,12 @@ public class PlayerAttack : MonoBehaviour
         {
             if (hitInfo.transform.name == "Zombie")
             {
-                Destroy(hitInfo.transform.gameObject);
+                Zombie zombieScript = hitInfo.transform.GetComponent<Zombie>();
+
+                if (zombieScript != null)
+                {
+                    zombieScript.GetDamaged(damage);
+                }
             }
         }
     }
