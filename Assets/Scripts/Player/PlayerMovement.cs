@@ -15,17 +15,26 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask groundMask;
     private float groundDistance = 0.4f;
     private bool isGrounded;
+
+    // Hook Check
+    private PlayerHookShoot playerHookShootScript;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        playerHookShootScript = GetComponent<PlayerHookShoot>();
     }
 
     // Fixed Update
     private void FixedUpdate()
     {
-        Move();
-        Jump();
+        // Prevent player Jump or move when moving to the hook
+        GameObject hook = playerHookShootScript.CheckHookExist();
+        if (hook == null)
+        {
+            Move();
+            Jump();
+        }
     }
 
     // Update is called once per frame
@@ -55,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
             // Prevent rigidbody change gravity
             rb.velocity = transform.forward * verticalInput * moveSpeed + transform.up * rb.velocity.y;
         }
-        
+
         if (horizontalInput != 0)
         {
             // Prevent rigidbody change gravity
